@@ -1,0 +1,30 @@
+name: Build
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '6.0.x'
+
+    - name: Build project
+      run: dotnet build --configuration Release
+
+    - name: Pack Release
+      run: zip -r anti-crack.zip .
+
+    - name: Upload Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: anti-crack.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
